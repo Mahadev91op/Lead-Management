@@ -74,8 +74,24 @@ export default function EditModal({ lead, onClose, onSave }) {
               placeholder="Notes..." value={form.notes} onChange={e => setForm({...form, notes: e.target.value})}></textarea>
           </div>
 
+          {/* --- History Log Section Added --- */}
+          {form.history && form.history.length > 0 && (
+            <div className="mt-4 pt-4 border-t border-slate-800">
+                <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Activity Log</h4>
+                <div className="space-y-2 max-h-24 overflow-y-auto custom-scrollbar pr-1">
+                {form.history.slice().reverse().map((h, i) => (
+                    <div key={i} className="text-xs text-slate-500 flex justify-between items-start border-b border-slate-800/50 pb-1 last:border-0">
+                    <span className="w-2/3"><span className="text-cyan-500 font-medium">{h.by}</span>: {h.msg}</span>
+                    <span className="text-slate-600 text-[10px] whitespace-nowrap">{new Date(h.date).toLocaleDateString()}</span>
+                    </div>
+                ))}
+                </div>
+            </div>
+          )}
+          {/* ---------------------------------- */}
+
           <div className="pt-2">
-            <button disabled={loading} className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-xl flex justify-center items-center gap-2 transition-all">
+            <button disabled={loading} className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-xl flex justify-center items-center gap-2 transition-all shadow-lg shadow-cyan-900/20">
                 {loading ? <Loader2 className="animate-spin" /> : <><Save size={18} /> Save Changes</>}
             </button>
           </div>

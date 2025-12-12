@@ -12,20 +12,29 @@ const LeadSchema = new mongoose.Schema({
   socialLink: { type: String, default: "" },
   addedBy: { type: String, default: "Admin" },
 
-  // --- New Advanced Fields ---
   priority: { 
     type: String, 
     enum: ["High", "Medium", "Low"], 
     default: "Medium" 
   },
-  followUpDate: { type: Date }, // Calendar ke liye
-  // --------------------------
+  followUpDate: { type: Date },
 
   status: {
     type: String,
     enum: ["New", "Contacted", "Meeting Fixed", "Closed"],
     default: "New",
   },
+  
+  // --- New History Field ---
+  history: [
+    {
+      msg: String, // e.g., "Status changed to Closed"
+      by: String,  // e.g., "Nitish"
+      date: { type: Date, default: Date.now }
+    }
+  ],
+  // -----------------------
+
   createdAt: { type: Date, default: Date.now },
 });
 

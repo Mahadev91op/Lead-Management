@@ -1,4 +1,4 @@
-// src/app/page.js
+// src/app/page.js (Replace existing content with this updated version)
 "use client";
 
 import { useState, useEffect } from "react";
@@ -11,7 +11,8 @@ import LeadCard from "@/components/LeadCard";
 import LeadTable from "@/components/LeadTable"; 
 import LeadForm from "@/components/LeadForm"; 
 import EditModal from "@/components/EditModal";
-import { Plus, LayoutGrid, List, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import LeadCharts from "@/components/LeadCharts"; // New Import
+import { Plus, LayoutGrid, List, Search, ChevronLeft, ChevronRight, Download } from "lucide-react"; // Download Icon Added
 
 export default function Home() {
   const { user } = useAuth();
@@ -20,7 +21,7 @@ export default function Home() {
   const [leads, setLeads] = useState([]);
   const [pagination, setPagination] = useState({ page: 1, pages: 1, total: 0 });
   const [loading, setLoading] = useState(true);
-  const [viewMode, setViewMode] = useState("table"); // Default view 'table' for better management
+  const [viewMode, setViewMode] = useState("table"); 
   
   // Filters & Sorting
   const [search, setSearch] = useState("");
@@ -56,23 +57,40 @@ export default function Home() {
     setLoading(false);
   };
 
-  // Debounce Search & Filter Effect
+  // --- NEW: CSV Download Function ---
+  const downloadCSV = () => {
+    if (leads.length === 0) return toast.error("No data to export");
+
+    const headers = ["Name,Email,Phone,Service,Budget,Status,Date,AddedBy"];
+    const rows = leads.map(l => 
+      `"${l.name}","${l.email}","${l.phone}","${l.service}","${l.budget}","${l.status}","${new Date(l.createdAt).toLocaleDateString()}","${l.addedBy}"`
+    );
+
+    const csvContent = "data:text/csv;charset=utf-8," + headers.concat(rows).join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "devsamp_leads.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success("Excel/CSV Downloaded! 📄");
+  };
+  // ----------------------------------
+
   useEffect(() => {
-    const timer = setTimeout(() => fetchLeads(1), 300); // 300ms delay for performance
+    const timer = setTimeout(() => fetchLeads(1), 300); 
     return () => clearTimeout(timer);
   }, [search, statusFilter, sortConfig]);
 
-  // Auth Check Effect
   useEffect(() => {
     if(user) fetchLeads(1);
   }, [user]);
 
-  // Sort Handler
   const handleSort = (key, direction) => {
     setSortConfig({ key, direction });
   };
 
-  // Delete Handler
   const handleDelete = async (id) => {
     if(!confirm("Are you sure you want to delete this lead?")) return;
     await fetch(`/api/leads/${id}`, { method: "DELETE" });
@@ -80,9 +98,7 @@ export default function Home() {
     toast.success("Lead Deleted");
   };
 
-  // Status Update Handler
   const handleUpdateStatus = async (id, newStatus) => {
-    // Optimistic Update (UI updates instantly)
     setLeads(leads.map(lead => lead._id === id ? { ...lead, status: newStatus } : lead));
     
     await fetch(`/api/leads/${id}`, { 
@@ -95,7 +111,6 @@ export default function Home() {
     else toast.success("Status Updated");
   };
 
-  // Edit Save Handler
   const handleEditSave = async (id, updatedData) => {
     await fetch(`/api/leads/${id}`, { 
       method: "PUT", 
@@ -106,7 +121,6 @@ export default function Home() {
     toast.success("Lead Info Updated");
   };
 
-  // Loading Screen for Auth
   if (!user) return <div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-500">Loading DevSamp...</div>;
 
   return (
@@ -116,9 +130,12 @@ export default function Home() {
 
       <div className="max-w-7xl mx-auto p-4 md:p-8">
         <Header />
+        
+        {/* New Charts Component */}
+        {!loading && leads.length > 0 && <LeadCharts leads={leads} />}
+
         <Stats leads={leads} /> 
 
-        {/* --- Status Filter Tabs --- */}
         <div className="flex overflow-x-auto gap-2 mb-6 pb-2 custom-scrollbar">
             {["All", "New", "Contacted", "Meeting Fixed", "Closed"].map((status) => (
                 <button 
@@ -135,7 +152,6 @@ export default function Home() {
             ))}
         </div>
 
-        {/* --- Toolbar (Search & View Toggle) --- */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
             <div className="relative w-full md:w-96 group">
                 <Search className="absolute left-3 top-3 text-slate-500 group-focus-within:text-cyan-400 transition-colors" size={18} />
@@ -149,6 +165,11 @@ export default function Home() {
             </div>
 
             <div className="flex gap-3 w-full md:w-auto">
+                {/* --- Export CSV Button --- */}
+                <button onClick={downloadCSV} className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold px-4 py-2.5 rounded-xl transition-all flex items-center gap-2">
+                    <Download size={18} /> <span className="hidden sm:inline">Export</span>
+                </button>
+
                 <div className="flex bg-slate-900 border border-slate-700 rounded-xl p-1">
                     <button onClick={() => setViewMode("grid")} className={`p-2.5 rounded-lg transition-all ${viewMode==='grid' ? 'bg-slate-800 text-cyan-400 shadow-sm' : 'text-slate-500 hover:text-slate-300'}`} title="Grid View"><LayoutGrid size={18}/></button>
                     <button onClick={() => setViewMode("table")} className={`p-2.5 rounded-lg transition-all ${viewMode==='table' ? 'bg-slate-800 text-cyan-400 shadow-sm' : 'text-slate-500 hover:text-slate-300'}`} title="Table View"><List size={18}/></button>
@@ -162,7 +183,6 @@ export default function Home() {
             </div>
         </div>
 
-        {/* --- Main Content Area --- */}
         {loading ? (
             <div className="h-64 flex items-center justify-center"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-cyan-500"></div></div>
         ) : (
@@ -190,7 +210,6 @@ export default function Home() {
                     />
                 )}
 
-                {/* --- Pagination Controls --- */}
                 {leads.length > 0 && (
                     <div className="flex justify-between items-center mt-6 bg-slate-900/50 p-3 px-5 rounded-xl border border-slate-800">
                         <span className="text-xs font-medium text-slate-400">Page {pagination.page} of {pagination.pages} • Total {pagination.total} leads</span>
@@ -210,7 +229,6 @@ export default function Home() {
         )}
       </div>
 
-      {/* --- Modals --- */}
       {showAddModal && <LeadForm onClose={() => setShowAddModal(false)} onLeadAdded={() => fetchLeads(1)} />}
       {editingLead && <EditModal lead={editingLead} onClose={() => setEditingLead(null)} onSave={handleEditSave} />}
     </div>

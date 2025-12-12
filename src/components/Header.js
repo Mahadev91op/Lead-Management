@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { User, LogOut } from "lucide-react";
+import { User, LogOut, Settings } from "lucide-react"; // Settings icon added
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
 
@@ -7,7 +7,7 @@ export default function Header() {
   const { user, logout } = useAuth();
 
   return (
-    <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex justify-between items-center mb-12">
+    <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex justify-between items-center mb-8">
       <div>
         <h1 className="text-4xl md:text-5xl font-extrabold text-white">
           Dev<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600">Samp</span>
@@ -16,11 +16,14 @@ export default function Header() {
       </div>
       <div>
         {user ? (
-          <div className="flex items-center gap-4">
-            <span className="text-white font-medium flex items-center gap-2">
-              <User className="text-cyan-400" /> {user.name}
-            </span>
-            <button onClick={logout} className="bg-red-500/10 text-red-400 px-3 py-2 rounded-lg hover:bg-red-500/20 transition">
+          <div className="flex items-center gap-3">
+            {/* Profile Link */}
+            <Link href="/profile" className="flex items-center gap-2 text-white font-medium bg-slate-800/50 hover:bg-slate-800 px-4 py-2 rounded-xl border border-slate-700 transition">
+              <User className="text-cyan-400" size={18} /> 
+              <span className="hidden md:inline">{user.name}</span>
+            </Link>
+            
+            <button onClick={logout} className="bg-red-500/10 text-red-400 px-3 py-2 rounded-xl border border-red-500/10 hover:bg-red-500/20 transition" title="Logout">
               <LogOut size={18} />
             </button>
           </div>

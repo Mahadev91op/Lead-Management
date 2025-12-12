@@ -1,0 +1,75 @@
+import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Legend } from "recharts";
+
+const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+
+export default function LeadCharts({ leads }) {
+  
+  // Data for Status Pie Chart
+  const statusData = [
+    { name: "New", value: leads.filter(l => l.status === "New").length },
+    { name: "Contacted", value: leads.filter(l => l.status === "Contacted").length },
+    { name: "Meeting", value: leads.filter(l => l.status === "Meeting Fixed").length },
+    { name: "Closed", value: leads.filter(l => l.status === "Closed").length },
+  ].filter(d => d.value > 0);
+
+  // Data for Service Bar Chart
+  const serviceCounts = leads.reduce((acc, lead) => {
+    acc[lead.service] = (acc[lead.service] || 0) + 1;
+    return acc;
+  }, {});
+  
+  const serviceData = Object.keys(serviceCounts).map(key => ({
+    name: key.split(" ")[0], // Short name
+    count: serviceCounts[key]
+  }));
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      
+      {/* Chart 1: Status Distribution */}
+      <div className="bg-slate-900/60 border border-slate-800 p-6 rounded-2xl backdrop-blur-xl">
+        <h3 className="text-white font-bold mb-4">Lead Status Distribution</h3>
+        <div className="h-64 w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={statusData}
+                cx="50%"
+                cy="50%"
+                innerRadius={60}
+                outerRadius={80}
+                fill="#8884d8"
+                paddingAngle={5}
+                dataKey="value"
+                label
+              >
+                {statusData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155', color: '#fff' }} />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* Chart 2: Services Demand */}
+      <div className="bg-slate-900/60 border border-slate-800 p-6 rounded-2xl backdrop-blur-xl">
+        <h3 className="text-white font-bold mb-4">Services Demand</h3>
+        <div className="h-64 w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={serviceData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+              <XAxis dataKey="name" stroke="#94a3b8" fontSize={12} />
+              <YAxis stroke="#94a3b8" fontSize={12} />
+              <Tooltip cursor={{fill: '#334155', opacity: 0.2}} contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155', color: '#fff' }} />
+              <Bar dataKey="count" fill="#06b6d4" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+    </div>
+  );
+}
