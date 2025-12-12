@@ -1,81 +1,80 @@
 // app/page.js
-"use client"; // क्योंकि हम बटन और स्टेट यूज़ करेंगे
+"use client";
+
 import { useState, useEffect } from "react";
+import { Toaster, toast } from "react-hot-toast";
+import Background from "@/components/Background";
+import Header from "@/components/Header";
+import Stats from "@/components/Stats"; // <-- New Import
+import LeadForm from "@/components/LeadForm";
+import LeadList from "@/components/LeadList";
 
 export default function Home() {
   const [leads, setLeads] = useState([]);
-  const [form, setForm] = useState({ name: "", email: "", phone: "" });
+  const [loading, setLoading] = useState(true);
 
-  // पेज लोड होते ही लीड्स लाना
+  const fetchLeads = async (silent = false) => {
+    if (!silent) setLoading(true);
+    const res = await fetch("/api/leads");
+    const data = await res.json();
+    if (data.success) setLeads(data.data);
+    if (!silent) setLoading(false);
+  };
+
   useEffect(() => {
     fetchLeads();
   }, []);
 
-  const fetchLeads = async () => {
-    const res = await fetch("/api/leads");
-    const data = await res.json();
-    if (data.success) setLeads(data.data);
+  const handleDelete = async (id) => {
+    if(!confirm("Are you sure?")) return;
+    setLeads(leads.filter(l => l._id !== id));
+    toast.success("Lead removed");
+    await fetch(`/api/leads/${id}`, { method: "DELETE" });
+    fetchLeads(true);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    // API को डेटा भेजना
-    await fetch("/api/leads", {
-      method: "POST",
+  const handleUpdateStatus = async (id, newStatus) => {
+    setLeads(leads.map(lead => lead._id === id ? { ...lead, status: newStatus } : lead));
+    if(newStatus === 'Closed') toast.success("Deal Closed! Amount added to revenue 🎉");
+    else toast("Status Updated");
+    await fetch(`/api/leads/${id}`, { 
+      method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
+      body: JSON.stringify({ status: newStatus })
     });
-    setForm({ name: "", email: "", phone: "" }); // फॉर्म खाली करें
-    fetchLeads(); // लिस्ट रिफ्रेश करें
   };
 
   return (
-    <div className="p-10 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold mb-6 text-blue-600">DevSamp CRM</h1>
+    <div className="min-h-screen text-slate-200 selection:bg-cyan-500 selection:text-white font-sans">
+      <Background />
+      <Toaster position="bottom-right" toastOptions={{
+        style: { background: '#1e293b', color: '#fff', border: '1px solid #334155' }
+      }}/>
 
-      {/* लीड ऐड करने का फॉर्म */}
-      <div className="bg-white p-6 rounded shadow-md mb-8">
-        <h2 className="text-xl font-semibold mb-4">Add New Lead</h2>
-        <form onSubmit={handleSubmit} className="flex gap-4">
-          <input
-            className="border p-2 rounded w-full"
-            placeholder="Client Name"
-            value={form.name}
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
-            required
-          />
-          <input
-            className="border p-2 rounded w-full"
-            placeholder="Email"
-            value={form.email}
-            onChange={(e) => setForm({ ...form, email: e.target.value })}
-            required
-          />
-          <input
-            className="border p-2 rounded w-full"
-            placeholder="Phone"
-            value={form.phone}
-            onChange={(e) => setForm({ ...form, phone: e.target.value })}
-          />
-          <button className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
-            Save
-          </button>
-        </form>
-      </div>
+      <div className="max-w-7xl mx-auto p-4 md:p-8">
+        <Header />
 
-      {/* लीड्स की लिस्ट */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {leads.map((lead) => (
-          <div key={lead._id} className="bg-white p-4 rounded shadow border-l-4 border-blue-500">
-            <h3 className="font-bold text-lg">{lead.name}</h3>
-            <p className="text-gray-600">{lead.email}</p>
-            <p className="text-gray-600">{lead.phone}</p>
-            <span className={`px-2 py-1 text-xs rounded-full mt-2 inline-block 
-              ${lead.status === 'New' ? 'bg-green-100 text-green-800' : 'bg-gray-100'}`}>
-              {lead.status}
-            </span>
+        {/* --- Stats Dashboard --- */}
+        <Stats leads={leads} />
+        {/* ----------------------- */}
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className="lg:col-span-4 xl:col-span-3">
+             <LeadForm onLeadAdded={() => {
+               fetchLeads(true);
+               toast.success("Added to Pipeline!");
+             }} />
           </div>
-        ))}
+
+          <div className="lg:col-span-8 xl:col-span-9">
+            <LeadList 
+              leads={leads} 
+              loading={loading} 
+              onDelete={handleDelete}
+              onUpdateStatus={handleUpdateStatus}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
