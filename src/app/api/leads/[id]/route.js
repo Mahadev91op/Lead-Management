@@ -1,21 +1,69 @@
-// app/api/leads/[id]/route.js
+// src/app/api/leads/[id]/route.js
 import connectDB from "@/lib/db";
 import Lead from "@/models/Lead";
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import jwt from "jsonwebtoken";
 
-// 1. लीड डिलीट करने के लिए (DELETE)
-export async function DELETE(request, { params }) {
-  const { id } = params;
-  await connectDB();
-  await Lead.findByIdAndDelete(id);
-  return NextResponse.json({ success: true, message: "Lead Deleted" });
+const SECRET = process.env.JWT_SECRET || "mysecretkey";
+
+// Helper Function: Check Auth
+async function checkAuth() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token");
+  if (!token) return null;
+  try {
+    return jwt.verify(token.value, SECRET);
+  } catch (e) {
+    return null;
+  }
 }
 
-// 2. लीड का स्टेटस अपडेट करने के लिए (PUT)
+// 1. DELETE Lead
+export async function DELETE(request, { params }) {
+  try {
+    // FIX: Next.js 16 me params ko await karna zaroori hai
+    const { id } = await params;
+
+    // Security Check
+    const user = await checkAuth();
+    if (!user) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+
+    await connectDB();
+    
+    const deletedLead = await Lead.findByIdAndDelete(id);
+
+    if (!deletedLead) {
+      return NextResponse.json({ success: false, message: "Lead not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ success: true, message: "Lead Deleted" });
+  } catch (error) {
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  }
+}
+
+// 2. UPDATE Lead (PUT)
 export async function PUT(request, { params }) {
-  const { id } = params;
-  const body = await request.json(); // जैसे { status: "Closed" }
-  await connectDB();
-  const updatedLead = await Lead.findByIdAndUpdate(id, body, { new: true });
-  return NextResponse.json({ success: true, data: updatedLead });
+  try {
+    // FIX: Await params here too
+    const { id } = await params;
+
+    // Security Check
+    const user = await checkAuth();
+    if (!user) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+
+    const body = await request.json(); 
+    
+    await connectDB();
+    const updatedLead = await Lead.findByIdAndUpdate(id, body, { new: true });
+
+    if (!updatedLead) {
+      return NextResponse.json({ success: false, message: "Lead not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ success: true, data: updatedLead });
+  } catch (error) {
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  }
 }

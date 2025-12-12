@@ -1,4 +1,3 @@
-// models/Lead.js
 import mongoose from "mongoose";
 
 const LeadSchema = new mongoose.Schema({
@@ -6,12 +5,21 @@ const LeadSchema = new mongoose.Schema({
   email: { type: String, required: true },
   phone: { type: String },
   
-  // --- New Fields ---
-  service: { type: String, default: "Web Development" }, // क्या बनवाना है?
-  budget: { type: String, default: "" },                 // कितना पैसा?
-  source: { type: String, default: "Direct" },           // कहाँ से आया?
-  notes: { type: String, default: "" },                  // एक्स्ट्रा बात
-  // ------------------
+  service: { type: String, default: "Web Development" },
+  budget: { type: String, default: "" },
+  source: { type: String, default: "Direct" },
+  notes: { type: String, default: "" },
+  socialLink: { type: String, default: "" },
+  addedBy: { type: String, default: "Admin" },
+
+  // --- New Advanced Fields ---
+  priority: { 
+    type: String, 
+    enum: ["High", "Medium", "Low"], 
+    default: "Medium" 
+  },
+  followUpDate: { type: Date }, // Calendar ke liye
+  // --------------------------
 
   status: {
     type: String,
