@@ -9,12 +9,12 @@ import Header from "@/components/Header";
 import Stats from "@/components/Stats";
 import LeadCard from "@/components/LeadCard";
 import LeadTable from "@/components/LeadTable"; 
-import LeadBoard from "@/components/LeadBoard"; // <-- New Import
+import LeadBoard from "@/components/LeadBoard"; 
 import LeadForm from "@/components/LeadForm"; 
 import EditModal from "@/components/EditModal";
 import LeadCharts from "@/components/LeadCharts";
 import ConfirmModal from "@/components/ConfirmModal"; 
-import { Plus, LayoutGrid, List, Search, ChevronLeft, ChevronRight, Download, Columns } from "lucide-react";
+import { Plus, LayoutGrid, List, Search, ChevronLeft, ChevronRight, Download, Columns, Loader2 } from "lucide-react";
 
 export default function Home() {
   const { user } = useAuth();
@@ -23,7 +23,7 @@ export default function Home() {
   const [leads, setLeads] = useState([]);
   const [pagination, setPagination] = useState({ page: 1, pages: 1, total: 0 });
   const [loading, setLoading] = useState(true);
-  const [viewMode, setViewMode] = useState("board"); // Default to Board view for pro feel
+  const [viewMode, setViewMode] = useState("board"); 
   
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
@@ -34,10 +34,13 @@ export default function Home() {
   const [deleteId, setDeleteId] = useState(null);
 
   const fetchLeads = async (page = 1) => {
-    setLoading(true);
+    // Note: Hum yahan setLoading(true) nahi kar rahe taaki search karte waqt "flash" na ho
+    // Sirf initial load par spinner dikhayenge
+    if(leads.length === 0) setLoading(true); 
+
     try {
       const query = new URLSearchParams({
-        page, limit: 100, // Fetch more for board view
+        page, limit: 100, 
         search, status: statusFilter, sortBy: sortConfig.key, order: sortConfig.direction
       });
 
@@ -91,15 +94,12 @@ export default function Home() {
   };
 
   const handleUpdateStatus = async (id, newStatus) => {
-    // Optimistic Update
     setLeads(prev => prev.map(lead => lead._id === id ? { ...lead, status: newStatus } : lead));
-    
     await fetch(`/api/leads/${id}`, { 
       method: "PUT", 
       headers: { "Content-Type": "application/json" }, 
       body: JSON.stringify({ status: newStatus }) 
     });
-    
     if(newStatus === 'Closed') toast.success("Deal Closed! 🎉");
     else toast.success("Status Updated");
   };
@@ -124,14 +124,15 @@ export default function Home() {
       <div className="max-w-[1600px] mx-auto p-4 md:p-6">
         <Header />
         
-        {/* Only show charts in Table/Grid mode to save space in Board mode */}
         {viewMode !== 'board' && !loading && leads.length > 0 && <LeadCharts leads={leads} />}
 
         <Stats leads={leads} /> 
 
         {/* Filters & Actions */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6 sticky top-2 z-30 bg-slate-950/80 p-2 rounded-2xl backdrop-blur-md border border-slate-800">
-            <div className="relative w-full md:w-96 group">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6 sticky top-2 z-30 bg-slate-950/80 p-2 rounded-2xl backdrop-blur-md border border-slate-800 shadow-xl">
+            
+            {/* FIX: Form Wrapper to prevent reload on Enter */}
+            <form onSubmit={(e) => e.preventDefault()} className="relative w-full md:w-96 group">
                 <Search className="absolute left-3 top-3 text-slate-500 group-focus-within:text-cyan-400 transition-colors" size={18} />
                 <input 
                     type="text" 
@@ -140,14 +141,13 @@ export default function Home() {
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                 />
-            </div>
+            </form>
 
             <div className="flex gap-2 w-full md:w-auto overflow-x-auto">
                 <button onClick={downloadCSV} className="bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 font-bold px-3 py-2.5 rounded-xl transition-all flex items-center gap-2">
                     <Download size={18} />
                 </button>
 
-                {/* View Switcher */}
                 <div className="flex bg-slate-900 border border-slate-700 rounded-xl p-1">
                     <button onClick={() => setViewMode("board")} className={`p-2.5 rounded-lg transition-all ${viewMode==='board' ? 'bg-slate-800 text-cyan-400 shadow-sm' : 'text-slate-500 hover:text-slate-300'}`} title="Kanban Board"><Columns size={18}/></button>
                     <button onClick={() => setViewMode("grid")} className={`p-2.5 rounded-lg transition-all ${viewMode==='grid' ? 'bg-slate-800 text-cyan-400 shadow-sm' : 'text-slate-500 hover:text-slate-300'}`} title="Grid View"><LayoutGrid size={18}/></button>
@@ -164,8 +164,8 @@ export default function Home() {
         </div>
 
         {/* Content Area */}
-        {loading ? (
-            <div className="h-64 flex items-center justify-center"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-cyan-500"></div></div>
+        {loading && leads.length === 0 ? (
+            <div className="h-64 flex items-center justify-center"><Loader2 className="animate-spin text-cyan-500" size={40} /></div>
         ) : (
             <>
                 {viewMode === "board" && (
