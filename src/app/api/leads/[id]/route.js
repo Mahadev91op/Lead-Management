@@ -1,65 +1,59 @@
-// ... imports same as before ...
 import connectDB from "@/lib/db";
 import Lead from "@/models/Lead";
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import jwt from "jsonwebtoken";
 
-const SECRET = process.env.JWT_SECRET || "mysecretkey";
+export async function PUT(request, { params }) {
+  // Fix: Next.js 15+ params handling
+  const { id } = await params;
+  const body = await request.json();
+  
+  await connectDB();
 
-// Helper same as before...
-async function checkAuth() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token");
-  if (!token) return null;
   try {
-    return jwt.verify(token.value, SECRET);
-  } catch (e) {
-    return null;
+    const lead = await Lead.findById(id);
+    if (!lead) return NextResponse.json({ success: false, message: "Lead not found" }, { status: 404 });
+
+    // --- 1. Fix: Initialize history if missing (for old leads) ---
+    if (!lead.history) {
+        lead.history = [];
+    }
+
+    // --- 2. History Logic ---
+    // Check if status is actually changing
+    if (body.status && body.status !== lead.status) {
+        lead.history.push({
+            msg: `Status changed from ${lead.status} to ${body.status}`,
+            by: body.updatedBy || "Admin", // Frontend se 'updatedBy' bheja ja sakta hai
+            date: new Date()
+        });
+    }
+
+    // --- 3. IMPORTANT FIX: Prevent History Overwrite ---
+    // Frontend se jo 'history' array aa raha hai use hata dein, 
+    // taaki wo hamare naye push kiye hue item ko replace na kare.
+    delete body.history; 
+    delete body._id; 
+
+    // Update remaining fields
+    Object.assign(lead, body);
+    
+    await lead.save();
+
+    return NextResponse.json({ success: true, data: lead });
+  } catch (error) {
+    console.error("Update Error:", error);
+    return NextResponse.json({ success: false, error: error.message });
   }
 }
 
-// DELETE same as before...
 export async function DELETE(request, { params }) {
-    // ... same code ...
-    const { id } = await params; // Fix for Next 15/16
-    await connectDB();
-    await Lead.findByIdAndDelete(id);
-    return NextResponse.json({ success: true, message: "Lead Deleted" });
-}
-
-// UPDATE Lead (PUT) - MODIFIED FOR HISTORY
-export async function PUT(request, { params }) {
+  const { id } = await params;
+  await connectDB();
+  
   try {
-    const { id } = await params;
-    const user = await checkAuth();
-    if (!user) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-
-    const body = await request.json(); 
-    await connectDB();
-
-    // History message create karein
-    let historyMsg = "Updated lead details";
-    if (body.status) historyMsg = `Status changed to ${body.status}`;
-    if (body.notes) historyMsg = `Added note: "${body.notes.substring(0, 20)}..."`;
-
-    const updatedLead = await Lead.findByIdAndUpdate(
-      id, 
-      { 
-        $set: body,
-        $push: { 
-          history: { msg: historyMsg, by: user.name, date: new Date() } 
-        }
-      }, 
-      { new: true }
-    );
-
-    if (!updatedLead) {
-      return NextResponse.json({ success: false, message: "Lead not found" }, { status: 404 });
-    }
-
-    return NextResponse.json({ success: true, data: updatedLead });
+    await Lead.findByIdAndDelete(id);
+    return NextResponse.json({ success: true, message: "Deleted" });
   } catch (error) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    return NextResponse.json({ success: false, error: error.message });
   }
 }

@@ -1,112 +1,103 @@
 // src/components/EditModal.js
 import { useState } from "react";
+import { X, Save, Clock, User } from "lucide-react";
 import { motion } from "framer-motion";
-import { X, Save, User, Mail, Phone, IndianRupee, Link as LinkIcon, FileText, Loader2 } from "lucide-react";
 
 export default function EditModal({ lead, onClose, onSave }) {
-  const [form, setForm] = useState({ ...lead });
+  const [formData, setFormData] = useState({ ...lead });
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    await onSave(lead._id, form);
+    await onSave(lead._id, formData);
     setLoading(false);
     onClose();
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
       <motion.div 
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.9 }}
-        className="bg-slate-900 border border-slate-700 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden"
+        initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+        className="bg-slate-900 border border-slate-700 w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
       >
-        {/* Header */}
-        <div className="flex justify-between items-center p-4 border-b border-slate-800 bg-slate-950/50">
-          <h3 className="text-lg font-bold text-white">Edit Deal</h3>
-          <button onClick={onClose} className="text-slate-400 hover:text-white transition bg-slate-800 p-1.5 rounded-full">
-            <X size={18} />
-          </button>
+        <div className="flex justify-between items-center p-5 border-b border-slate-800 bg-slate-950">
+          <h2 className="text-xl font-bold text-white">Edit Lead</h2>
+          <button onClick={onClose} className="text-slate-400 hover:text-white bg-slate-800 p-2 rounded-full"><X size={20}/></button>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="p-5 space-y-4 max-h-[70vh] overflow-y-auto custom-scrollbar">
-          
-          <InputGroup icon={<User size={16}/>} value={form.name} onChange={e => setForm({...form, name: e.target.value})} placeholder="Name" />
-          <InputGroup icon={<Mail size={16}/>} value={form.email} onChange={e => setForm({...form, email: e.target.value})} placeholder="Email" />
-          
-          <div className="grid grid-cols-2 gap-3">
-            <InputGroup icon={<Phone size={16}/>} value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} placeholder="Phone" />
-            <InputGroup icon={<IndianRupee size={16}/>} value={form.budget} onChange={e => setForm({...form, budget: e.target.value})} placeholder="Budget" />
-          </div>
+        <div className="p-6 overflow-y-auto custom-scrollbar">
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+             {/* Fields */}
+             <div className="space-y-1">
+                <label className="text-xs text-slate-400 ml-1">Client Name</label>
+                <input className="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-white outline-none focus:border-cyan-500" 
+                    value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
+             </div>
+             <div className="space-y-1">
+                <label className="text-xs text-slate-400 ml-1">Niche</label>
+                <input className="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-white outline-none focus:border-cyan-500" 
+                    value={formData.niche} onChange={e => setFormData({...formData, niche: e.target.value})} />
+             </div>
+             <div className="space-y-1">
+                <label className="text-xs text-slate-400 ml-1">Email</label>
+                <input className="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-white outline-none focus:border-cyan-500" 
+                    value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
+             </div>
+             <div className="space-y-1">
+                <label className="text-xs text-slate-400 ml-1">Phone</label>
+                <input className="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-white outline-none focus:border-cyan-500" 
+                    value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} />
+             </div>
+             <div className="space-y-1">
+                <label className="text-xs text-slate-400 ml-1">Budget</label>
+                <input className="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-white outline-none focus:border-cyan-500" 
+                    value={formData.budget} onChange={e => setFormData({...formData, budget: e.target.value})} />
+             </div>
+             <div className="space-y-1">
+                <label className="text-xs text-slate-400 ml-1">Next Follow Up</label>
+                <input type="date" className="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-white outline-none focus:border-cyan-500" 
+                    value={formData.followUpDate ? formData.followUpDate.split('T')[0] : ''} onChange={e => setFormData({...formData, followUpDate: e.target.value})} />
+             </div>
+             <div className="col-span-1 md:col-span-2 space-y-1">
+                <label className="text-xs text-slate-400 ml-1">Notes</label>
+                <textarea rows="3" className="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-white outline-none focus:border-cyan-500" 
+                    value={formData.notes} onChange={e => setFormData({...formData, notes: e.target.value})} />
+             </div>
 
-          <InputGroup icon={<LinkIcon size={16}/>} value={form.socialLink} onChange={e => setForm({...form, socialLink: e.target.value})} placeholder="Social Link" />
+             <div className="col-span-1 md:col-span-2">
+                <button disabled={loading} className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-xl transition-all">
+                    {loading ? "Saving..." : "Update Lead"}
+                </button>
+             </div>
+          </form>
 
-          {/* Service & Status */}
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1">
-                <label className="text-xs text-slate-500 ml-1">Service</label>
-                <select className="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-sm outline-none focus:border-cyan-500"
-                    value={form.service} onChange={e => setForm({...form, service: e.target.value})}>
-                    <option>Web Development</option>
-                    <option>App Development</option>
-                    <option>SEO & Marketing</option>
-                    <option>UI/UX Design</option>
-                </select>
+          {/* --- History / Timeline Section --- */}
+          <div className="border-t border-slate-800 pt-5">
+            <h3 className="text-sm font-bold text-slate-300 mb-3 flex items-center gap-2"><Clock size={16}/> Activity History</h3>
+            <div className="bg-slate-950/50 rounded-xl p-4 border border-slate-800 space-y-4 max-h-40 overflow-y-auto custom-scrollbar">
+                {lead.history && lead.history.length > 0 ? (
+                    lead.history.slice().reverse().map((h, i) => (
+                        <div key={i} className="flex gap-3 text-xs">
+                            <div className="min-w-[4px] bg-slate-700 rounded-full"></div>
+                            <div>
+                                <p className="text-slate-300">{h.msg}</p>
+                                <div className="text-slate-500 flex gap-2 mt-1">
+                                    <span>{new Date(h.date).toLocaleString()}</span>
+                                    <span>•</span>
+                                    <span className="text-cyan-600">{h.by || "System"}</span>
+                                </div>
+                            </div>
+                        </div>
+                    ))
+                ) : (
+                    <p className="text-slate-600 text-xs italic">No history recorded yet.</p>
+                )}
             </div>
-            <div className="space-y-1">
-                <label className="text-xs text-slate-500 ml-1">Status</label>
-                <select className="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-sm outline-none focus:border-cyan-500"
-                    value={form.status} onChange={e => setForm({...form, status: e.target.value})}>
-                    <option value="New">New</option>
-                    <option value="Contacted">Contacted</option>
-                    <option value="Meeting Fixed">Meeting Fixed</option>
-                    <option value="Closed">Closed</option>
-                </select>
-            </div>
           </div>
-
-          <div className="relative">
-            <FileText className="absolute left-3 top-3 text-slate-500" size={16} />
-            <textarea rows="3" className="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 pl-10 pr-3 text-white text-sm outline-none focus:border-cyan-500 placeholder-slate-600 resize-none"
-              placeholder="Notes..." value={form.notes} onChange={e => setForm({...form, notes: e.target.value})}></textarea>
-          </div>
-
-          {/* --- History Log Section Added --- */}
-          {form.history && form.history.length > 0 && (
-            <div className="mt-4 pt-4 border-t border-slate-800">
-                <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Activity Log</h4>
-                <div className="space-y-2 max-h-24 overflow-y-auto custom-scrollbar pr-1">
-                {form.history.slice().reverse().map((h, i) => (
-                    <div key={i} className="text-xs text-slate-500 flex justify-between items-start border-b border-slate-800/50 pb-1 last:border-0">
-                    <span className="w-2/3"><span className="text-cyan-500 font-medium">{h.by}</span>: {h.msg}</span>
-                    <span className="text-slate-600 text-[10px] whitespace-nowrap">{new Date(h.date).toLocaleDateString()}</span>
-                    </div>
-                ))}
-                </div>
-            </div>
-          )}
           {/* ---------------------------------- */}
-
-          <div className="pt-2">
-            <button disabled={loading} className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-xl flex justify-center items-center gap-2 transition-all shadow-lg shadow-cyan-900/20">
-                {loading ? <Loader2 className="animate-spin" /> : <><Save size={18} /> Save Changes</>}
-            </button>
-          </div>
-        </form>
+        </div>
       </motion.div>
-    </div>
-  );
-}
-
-function InputGroup({ icon, value, onChange, placeholder }) {
-  return (
-    <div className="relative">
-      <div className="absolute left-3.5 top-3 text-slate-500">{icon}</div>
-      <input type="text" className="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 pl-10 pr-3 text-white text-sm outline-none focus:border-cyan-500 placeholder-slate-600 transition-all"
-        placeholder={placeholder} value={value} onChange={onChange} />
     </div>
   );
 }
