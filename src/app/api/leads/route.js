@@ -14,16 +14,20 @@ export async function GET(request) {
   const page = parseInt(searchParams.get("page")) || 1;
   const limit = parseInt(searchParams.get("limit")) || 10;
   const search = searchParams.get("search") || "";
-  const status = searchParams.get("status") || "All"; // Status Filter
-  const sortBy = searchParams.get("sortBy") || "createdAt"; // Sort Field
-  const order = searchParams.get("order") === "asc" ? 1 : -1; // Sort Order
+  const status = searchParams.get("status") || "All"; 
+  const sortBy = searchParams.get("sortBy") || "createdAt"; 
+  const order = searchParams.get("order") === "asc" ? 1 : -1; 
 
   const skip = (page - 1) * limit;
 
-  // Query Build
+  // Query Build Updated for Search
   const query = {};
   if (search) {
-    query.name = { $regex: search, $options: "i" };
+    query.$or = [
+      { name: { $regex: search, $options: "i" } },
+      { niche: { $regex: search, $options: "i" } }, // Added Niche Search
+      { email: { $regex: search, $options: "i" } }
+    ];
   }
   if (status !== "All") {
     query.status = status;
@@ -31,7 +35,7 @@ export async function GET(request) {
 
   try {
     const leads = await Lead.find(query)
-      .sort({ [sortBy]: order }) // Dynamic Sorting
+      .sort({ [sortBy]: order }) 
       .skip(skip)
       .limit(limit);
       

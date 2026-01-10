@@ -5,6 +5,10 @@ const LeadSchema = new mongoose.Schema({
   email: { type: String, required: true },
   phone: { type: String },
   
+  // --- New Niche Field ---
+  niche: { type: String, default: "" }, 
+  // -----------------------
+
   service: { type: String, default: "Web Development" },
   budget: { type: String, default: "" },
   source: { type: String, default: "Direct" },
@@ -25,15 +29,13 @@ const LeadSchema = new mongoose.Schema({
     default: "New",
   },
   
-  // --- New History Field ---
   history: [
     {
-      msg: String, // e.g., "Status changed to Closed"
-      by: String,  // e.g., "Nitish"
+      msg: String,
+      by: String,
       date: { type: Date, default: Date.now }
     }
   ],
-  // -----------------------
 
   createdAt: { type: Date, default: Date.now },
 });

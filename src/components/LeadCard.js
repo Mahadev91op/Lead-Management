@@ -1,6 +1,6 @@
 // src/components/LeadCard.js
 import { motion } from "framer-motion";
-import { Mail, Phone, MessageCircle, Trash2, IndianRupee, Globe, Calendar, Link as LinkIcon, UserCircle, Edit2, Flag } from "lucide-react";
+import { Mail, Phone, MessageCircle, Trash2, IndianRupee, Globe, Calendar, Link as LinkIcon, UserCircle, Edit2, Flag, Briefcase } from "lucide-react";
 
 export default function LeadCard({ lead, onDelete, onUpdateStatus, onEdit }) {
   
@@ -27,12 +27,20 @@ export default function LeadCard({ lead, onDelete, onUpdateStatus, onEdit }) {
       exit={{ opacity: 0, scale: 0.95 }}
       className="group bg-slate-900/80 border border-slate-800 p-5 rounded-2xl hover:border-cyan-500/30 transition-all shadow-lg hover:shadow-cyan-900/10"
     >
-      {/* Top Header: Service & Priority */}
       <div className="flex justify-between items-start mb-4">
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
             <span className="text-[10px] font-bold uppercase tracking-wider text-cyan-400 bg-cyan-950/40 px-2 py-1 rounded border border-cyan-500/20">
             {lead.service}
             </span>
+            
+            {/* --- Display Niche --- */}
+            {lead.niche && (
+                <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-400 bg-indigo-950/40 px-2 py-1 rounded border border-indigo-500/20 flex items-center gap-1">
+                 <Briefcase size={10} /> {lead.niche}
+                </span>
+            )}
+            {/* --------------------- */}
+
             <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded border flex items-center gap-1 ${getPriorityColor(lead.priority)}`}>
             <Flag size={10} /> {lead.priority || "Medium"}
             </span>
@@ -44,7 +52,6 @@ export default function LeadCard({ lead, onDelete, onUpdateStatus, onEdit }) {
         </div>
       </div>
 
-      {/* Main Info */}
       <div className="flex flex-col gap-3">
         <div className="flex justify-between items-start">
           <div>
@@ -58,7 +65,6 @@ export default function LeadCard({ lead, onDelete, onUpdateStatus, onEdit }) {
             </div>
           </div>
           
-          {/* Edit/Delete Buttons */}
           <div className="flex gap-1">
             <button onClick={() => onEdit(lead)} className="text-slate-500 hover:text-blue-400 p-1.5 hover:bg-blue-500/10 rounded transition-colors" title="Edit">
                 <Edit2 size={16} />
@@ -69,7 +75,6 @@ export default function LeadCard({ lead, onDelete, onUpdateStatus, onEdit }) {
           </div>
         </div>
 
-        {/* Contact Info */}
         <div className="bg-slate-950/50 p-3 rounded-xl border border-slate-800/50 text-sm text-slate-400 flex flex-col gap-2.5">
            <div className="flex justify-between items-center border-b border-slate-800/50 pb-2">
               <span className="flex items-center gap-2 truncate"><Mail size={14} className="text-slate-600"/> {lead.email}</span>
@@ -80,10 +85,8 @@ export default function LeadCard({ lead, onDelete, onUpdateStatus, onEdit }) {
            <span className="flex items-center gap-2"><Phone size={14} className="text-slate-600"/> {lead.phone || "No Phone"}</span>
         </div>
 
-        {/* Notes */}
         {lead.notes && <p className="text-xs text-slate-500 italic line-clamp-2 px-1">"{lead.notes}"</p>}
 
-        {/* Footer Actions */}
         <div className="flex items-center justify-between mt-1 pt-3 border-t border-slate-800/50">
           <select 
             value={lead.status} 

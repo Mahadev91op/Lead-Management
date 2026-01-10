@@ -1,26 +1,34 @@
 // src/components/LeadForm.js
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
-import { X, Save, User, Mail, Phone, Calendar, Flag, IndianRupee, Layers, Globe, FileText, Link as LinkIcon, Loader2 } from "lucide-react";
+import { X, Save, User, Mail, Phone, Calendar, Flag, IndianRupee, Layers, FileText, Link as LinkIcon, Loader2, Briefcase, AlertCircle } from "lucide-react";
 
 export default function LeadForm({ onClose, onLeadAdded }) {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
-  
-  // Automatic Date Logic (Today's Date)
+  const [errors, setErrors] = useState({}); // Validation State
+
   const today = new Date().toISOString().split('T')[0];
 
   const [form, setForm] = useState({ 
-    name: "", email: "", phone: "", service: "Web Development", 
-    budget: "", source: "LinkedIn", notes: "", socialLink: "", 
-    priority: "Medium", 
-    followUpDate: today // <-- Automatic Date Here
+    name: "", email: "", phone: "", niche: "",
+    service: "Web Development", budget: "", source: "LinkedIn", notes: "", socialLink: "", 
+    priority: "Medium", followUpDate: today
   });
+
+  const validate = () => {
+    const newErrors = {};
+    if (!form.name.trim()) newErrors.name = "Client Name is required";
+    if (!form.email.trim()) newErrors.email = "Email is required";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.name || !form.email) return;
+    if (!validate()) return; // Stop if invalid
+
     setLoading(true);
     await fetch("/api/leads", {
       method: "POST",
@@ -48,9 +56,27 @@ export default function LeadForm({ onClose, onLeadAdded }) {
         <div className="p-6 overflow-y-auto custom-scrollbar">
             <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 
-                <InputGroup icon={<User size={18}/>} placeholder="Client Name" value={form.name} onChange={e => setForm({...form, name: e.target.value})} />
-                <InputGroup icon={<Mail size={18}/>} type="email" placeholder="Email" value={form.email} onChange={e => setForm({...form, email: e.target.value})} />
-                <InputGroup icon={<Phone size={18}/>} type="tel" placeholder="Phone" value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} />
+                {/* Inputs with Error Handling */}
+                <InputGroup 
+                    icon={<User size={18}/>} 
+                    placeholder="Client Name *" 
+                    value={form.name} 
+                    onChange={e => { setForm({...form, name: e.target.value}); if(errors.name) setErrors({...errors, name: null}); }} 
+                    error={errors.name}
+                />
+                
+                <InputGroup icon={<Briefcase size={18}/>} placeholder="Business Niche (e.g. Real Estate)" value={form.niche} onChange={e => setForm({...form, niche: e.target.value})} />
+                
+                <InputGroup 
+                    icon={<Mail size={18}/>} 
+                    type="email" 
+                    placeholder="Email Address *" 
+                    value={form.email} 
+                    onChange={e => { setForm({...form, email: e.target.value}); if(errors.email) setErrors({...errors, email: null}); }}
+                    error={errors.email}
+                />
+                
+                <InputGroup icon={<Phone size={18}/>} type="tel" placeholder="Phone Number" value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} />
                 <InputGroup icon={<LinkIcon size={18}/>} placeholder="Social Link" value={form.socialLink} onChange={e => setForm({...form, socialLink: e.target.value})} />
 
                 <div className="relative group">
@@ -63,7 +89,6 @@ export default function LeadForm({ onClose, onLeadAdded }) {
                     </select>
                 </div>
                 
-                {/* Date Input with Auto-Value */}
                 <InputGroup icon={<Calendar size={18}/>} type="date" value={form.followUpDate} onChange={e => setForm({...form, followUpDate: e.target.value})} />
 
                 <div className="relative group">
@@ -86,7 +111,7 @@ export default function LeadForm({ onClose, onLeadAdded }) {
                 </div>
 
                 <div className="md:col-span-2">
-                    <button disabled={loading} className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-4 rounded-xl shadow-lg transition-all flex justify-center items-center gap-2">
+                    <button disabled={loading} className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold py-4 rounded-xl shadow-lg transition-all flex justify-center items-center gap-2">
                         {loading ? <Loader2 className="animate-spin" /> : <><Save size={20} /> Save Lead</>}
                     </button>
                 </div>
@@ -97,12 +122,17 @@ export default function LeadForm({ onClose, onLeadAdded }) {
   );
 }
 
-function InputGroup({ icon, type = "text", placeholder, value, onChange }) {
+function InputGroup({ icon, type = "text", placeholder, value, onChange, error }) {
   return (
     <div className="relative group">
-      <div className="absolute left-3.5 top-3.5 text-slate-500 group-focus-within:text-cyan-400 transition-colors">{icon}</div>
-      <input type={type} className="w-full bg-slate-950/50 border border-slate-700 rounded-xl py-3 pl-11 pr-4 text-white outline-none focus:border-cyan-500 placeholder-slate-600 text-sm transition-all"
-        placeholder={placeholder} value={value} onChange={onChange} />
+      <div className={`absolute left-3.5 top-3.5 transition-colors ${error ? "text-red-500" : "text-slate-500 group-focus-within:text-cyan-400"}`}>{icon}</div>
+      <input 
+        type={type} 
+        className={`w-full bg-slate-950/50 border rounded-xl py-3 pl-11 pr-4 text-white outline-none placeholder-slate-600 text-sm transition-all
+        ${error ? "border-red-500 focus:border-red-500 animate-shake" : "border-slate-700 focus:border-cyan-500"}`}
+        placeholder={placeholder} value={value} onChange={onChange} 
+      />
+      {error && <span className="absolute right-3 top-3.5 text-red-500"><AlertCircle size={18}/></span>}
     </div>
   );
 }

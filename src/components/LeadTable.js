@@ -57,65 +57,50 @@ export default function LeadTable({ leads, onEdit, onDelete, onSort, sortConfig,
               key={lead._id} 
               className="hover:bg-slate-800/40 transition-colors group"
             >
-              {/* Client Info */}
               <td className="p-4">
                 <div className="font-bold text-white group-hover:text-cyan-400 transition">{lead.name}</div>
                 <div className="text-xs text-slate-500 flex flex-col gap-1.5 mt-1.5">
                   <span className="flex items-center gap-2"><Mail size={12}/> {lead.email}</span>
                   
-                  {/* Phone & WhatsApp Button */}
                   {lead.phone && (
                     <div className="flex items-center gap-2">
                         <Phone size={12}/> {lead.phone}
-                        <a
-                            href={`https://wa.me/${lead.phone.replace(/\D/g,'')}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-green-500 hover:text-green-400 bg-green-500/10 p-1 rounded-full transition-colors flex items-center justify-center w-5 h-5"
-                            title="Chat on WhatsApp"
-                        >
+                        <a href={`https://wa.me/${lead.phone.replace(/\D/g,'')}`} target="_blank" rel="noopener noreferrer" className="text-green-500 hover:text-green-400 bg-green-500/10 p-1 rounded-full transition-colors flex items-center justify-center w-5 h-5">
                             <MessageCircle size={12} />
                         </a>
                     </div>
                   )}
 
-                  {/* Social Link */}
                   {lead.socialLink && (
-                    <a 
-                      href={lead.socialLink} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-blue-400 hover:text-blue-300 hover:underline"
-                    >
+                    <a href={lead.socialLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-blue-400 hover:text-blue-300 hover:underline">
                       <LinkIcon size={12}/> Profile
                     </a>
                   )}
                 </div>
               </td>
 
-              {/* Priority & Service */}
               <td className="p-4">
                 <div className="flex flex-col items-start gap-1.5">
                     <span className="text-slate-300 text-xs font-medium">{lead.service}</span>
+                    
+                    {/* --- Display Niche --- */}
+                    {lead.niche && <span className="text-indigo-400 text-[11px] italic">{lead.niche}</span>}
+                    {/* --------------------- */}
+
                     <span className={`text-[10px] px-2 py-0.5 rounded-full border ${getPriorityColor(lead.priority)}`}>
                         {lead.priority || "Medium"}
                     </span>
                 </div>
               </td>
 
-              {/* Budget */}
               <td className="p-4 font-mono text-green-400 font-bold">
                 {lead.budget ? <span className="flex items-center gap-1"><IndianRupee size={12}/>{lead.budget}</span> : "-"}
               </td>
 
-              {/* Status Dropdown (Fixed) */}
               <td className="p-4">
                 <select 
                     value={lead.status} 
-                    onChange={(e) => {
-                        // Immediate Feedback
-                        onUpdateStatus(lead._id, e.target.value);
-                    }}
+                    onChange={(e) => onUpdateStatus(lead._id, e.target.value)}
                     className={`text-[11px] font-bold px-2 py-1.5 rounded-lg border outline-none bg-slate-950 cursor-pointer transition-all w-28 ${getStatusColor(lead.status)}`}
                 >
                     <option value="New">New</option>
@@ -125,7 +110,6 @@ export default function LeadTable({ leads, onEdit, onDelete, onSort, sortConfig,
                 </select>
               </td>
 
-              {/* Date & Added By */}
               <td className="p-4 text-slate-400 text-xs">
                 <div className="flex items-center gap-1.5 whitespace-nowrap">
                     <Calendar size={12} className="text-slate-600"/> 
@@ -134,7 +118,6 @@ export default function LeadTable({ leads, onEdit, onDelete, onSort, sortConfig,
                 <div className="text-[10px] text-slate-600 mt-1 pl-4">by {lead.addedBy}</div>
               </td>
 
-              {/* Actions */}
               <td className="p-4 text-right">
                 <div className="flex justify-end gap-2">
                     <button onClick={() => onEdit(lead)} className="text-slate-400 hover:text-cyan-400 p-2 bg-slate-800/50 hover:bg-cyan-500/10 rounded transition border border-transparent hover:border-cyan-500/20" title="Edit">
