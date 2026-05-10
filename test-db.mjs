@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 
-const uri = "mongodb+srv://mahadevtanti191_db_user:Maha123@cluster0.omslik6.mongodb.net/devsamp_crm?retryWrites=true&w=majority";
+const uri = "mongodb://mahadevtanti191_db_user:Maha123@ac-ggzv2mm-shard-00-00.omslik6.mongodb.net:27017,ac-ggzv2mm-shard-00-01.omslik6.mongodb.net:27017,ac-ggzv2mm-shard-00-02.omslik6.mongodb.net:27017/devsamp_crm?authSource=admin&replicaSet=atlas-rocv15-shard-0&retryWrites=true&w=majority&tls=true";
 
 async function testConnection() {
   try {
-    console.log("Connecting to MongoDB...");
+    console.log("Connecting to MongoDB via direct URI...");
     await mongoose.connect(uri);
     console.log("Connected successfully!");
     process.exit(0);

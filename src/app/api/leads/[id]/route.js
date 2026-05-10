@@ -23,9 +23,18 @@ export async function PUT(request, { params }) {
     if (body.status && body.status !== lead.status) {
         lead.history.push({
             msg: `Status changed from ${lead.status} to ${body.status}`,
-            by: body.updatedBy || "Admin", // Frontend se 'updatedBy' bheja ja sakta hai
+            by: body.updatedBy || "Admin", 
             date: new Date()
         });
+    }
+
+    if (body.newNote) {
+        lead.history.push({
+            msg: `Note: ${body.newNote}`,
+            by: body.updatedBy || "Admin",
+            date: new Date()
+        });
+        delete body.newNote;
     }
 
     // --- 3. IMPORTANT FIX: Prevent History Overwrite ---

@@ -23,8 +23,18 @@ export default function LeadCharts({ leads }) {
     count: serviceCounts[key]
   }));
 
+  const sourceCounts = leads.reduce((acc, lead) => {
+    acc[lead.source || "Direct"] = (acc[lead.source || "Direct"] || 0) + 1;
+    return acc;
+  }, {});
+
+  const sourceData = Object.keys(sourceCounts).map(key => ({
+    name: key,
+    value: sourceCounts[key]
+  }));
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
       
       {/* Chart 1: Status Distribution */}
       <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm">
@@ -66,6 +76,33 @@ export default function LeadCharts({ leads }) {
               <Tooltip cursor={{fill: '#f1f5f9', opacity: 0.8}} contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e2e8f0', color: '#0f172a' }} />
               <Bar dataKey="count" fill="#0ea5e9" radius={[4, 4, 0, 0]} />
             </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* Chart 3: Lead Sources */}
+      <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm">
+        <h3 className="text-slate-900 font-bold mb-4">Lead Sources</h3>
+        <div className="h-64 w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={sourceData}
+                cx="50%"
+                cy="50%"
+                innerRadius={50}
+                outerRadius={70}
+                paddingAngle={5}
+                dataKey="value"
+                label
+              >
+                {sourceData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[(index + 2) % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e2e8f0', color: '#0f172a' }} />
+              <Legend />
+            </PieChart>
           </ResponsiveContainer>
         </div>
       </div>

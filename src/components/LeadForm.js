@@ -102,6 +102,18 @@ export default function LeadForm({ onClose, onLeadAdded }) {
                     </select>
                 </div>
                 
+                <div className="relative group">
+                    <Flag className="absolute left-3.5 top-3.5 text-slate-400" size={18} />
+                    <select className="w-full bg-white border border-slate-200 rounded-xl py-3 pl-11 pr-4 text-slate-900 outline-none focus:border-cyan-500 appearance-none text-sm"
+                        value={form.source} onChange={e => setForm({...form, source: e.target.value})}>
+                        <option>LinkedIn</option>
+                        <option>Facebook Ads</option>
+                        <option>Google Ads</option>
+                        <option>Referral</option>
+                        <option>Direct</option>
+                    </select>
+                </div>
+
                 <InputGroup icon={<IndianRupee size={18}/>} placeholder="Budget" value={form.budget} onChange={e => setForm({...form, budget: e.target.value})} />
 
                 <div className="md:col-span-2 relative">

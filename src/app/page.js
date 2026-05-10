@@ -14,7 +14,7 @@ import LeadForm from "@/components/LeadForm";
 import EditModal from "@/components/EditModal";
 import LeadCharts from "@/components/LeadCharts";
 import ConfirmModal from "@/components/ConfirmModal"; 
-import { Plus, LayoutGrid, List, Search, ChevronLeft, ChevronRight, Download, Columns, Loader2 } from "lucide-react";
+import { Plus, LayoutGrid, List, Search, ChevronLeft, ChevronRight, Download, Columns, Loader2, BellRing, ArrowRight } from "lucide-react";
 
 export default function Home() {
   const { user } = useAuth();
@@ -114,6 +114,15 @@ export default function Home() {
     toast.success("Lead Info Updated");
   };
 
+  const urgentLeads = leads.filter(l => {
+    if (l.status === "Closed") return false;
+    const followDate = new Date(l.followUpDate || l.createdAt);
+    followDate.setHours(0,0,0,0);
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    return followDate <= today;
+  });
+
   if (!user) return <div className="min-h-screen bg-slate-50 flex items-center justify-center text-slate-500">Loading DevSamp...</div>;
 
   return (
@@ -127,6 +136,26 @@ export default function Home() {
         {viewMode !== 'board' && !loading && leads.length > 0 && <LeadCharts leads={leads} />}
 
         <Stats leads={leads} /> 
+
+        {urgentLeads.length > 0 && (
+          <div className="bg-red-50 border border-red-200 p-4 rounded-2xl mb-6 shadow-sm flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="bg-red-100 p-2 rounded-full text-red-600">
+                <BellRing size={20} className="animate-pulse" />
+              </div>
+              <div>
+                <h3 className="font-bold text-red-800 text-sm">Action Required!</h3>
+                <p className="text-red-600 text-xs mt-0.5">You have {urgentLeads.length} lead(s) requiring follow-up today or overdue.</p>
+              </div>
+            </div>
+            <button 
+              onClick={() => { setViewMode('table'); setSortConfig({ key: 'followUpDate', direction: 'asc' }) }} 
+              className="text-xs font-bold bg-white text-red-600 px-3 py-1.5 rounded-lg border border-red-200 hover:bg-red-100 transition flex items-center gap-1"
+            >
+              View Leads <ArrowRight size={14} />
+            </button>
+          </div>
+        )}
 
         {/* Filters & Actions */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6 sticky top-2 z-30 bg-white/80 p-2 rounded-2xl backdrop-blur-md border border-slate-200 shadow-sm">

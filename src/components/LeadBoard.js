@@ -5,6 +5,22 @@ import { motion } from "framer-motion";
 export default function LeadBoard({ leads, onDelete, onUpdateStatus, onEdit }) {
   const statuses = ["New", "Contacted", "Meeting Fixed", "Closed"];
 
+  const handleDragStart = (e, leadId) => {
+    e.dataTransfer.setData("leadId", leadId);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault(); // allow drop
+  };
+
+  const handleDrop = (e, newStatus) => {
+    e.preventDefault();
+    const leadId = e.dataTransfer.getData("leadId");
+    if (leadId) {
+      onUpdateStatus(leadId, newStatus);
+    }
+  };
+
   const getColumnColor = (status) => {
     if (status === "New") return "border-blue-500/30 bg-blue-500/5";
     if (status === "Contacted") return "border-yellow-500/30 bg-yellow-500/5";
@@ -19,7 +35,12 @@ export default function LeadBoard({ leads, onDelete, onUpdateStatus, onEdit }) {
         const columnLeads = leads.filter((l) => l.status === status);
 
         return (
-          <div key={status} className={`min-w-[320px] max-w-[320px] flex flex-col rounded-2xl border ${getColumnColor(status)} backdrop-blur-sm bg-white`}>
+          <div 
+            key={status} 
+            className={`min-w-[320px] max-w-[320px] flex flex-col rounded-2xl border ${getColumnColor(status)} backdrop-blur-sm bg-white`}
+            onDragOver={handleDragOver}
+            onDrop={(e) => handleDrop(e, status)}
+          >
             {/* Column Header */}
             <div className="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50 rounded-t-2xl">
               <h3 className="font-bold text-slate-800 text-sm uppercase tracking-wide">{status}</h3>
@@ -32,13 +53,19 @@ export default function LeadBoard({ leads, onDelete, onUpdateStatus, onEdit }) {
             <div className="flex-1 overflow-y-auto p-3 flex flex-col gap-3 custom-scrollbar">
               {columnLeads.length > 0 ? (
                 columnLeads.map((lead) => (
-                  <LeadCard 
-                    key={lead._id} 
-                    lead={lead} 
-                    onDelete={onDelete} 
-                    onUpdateStatus={onUpdateStatus} 
-                    onEdit={onEdit} 
-                  />
+                  <div 
+                    key={lead._id}
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, lead._id)}
+                    className="cursor-grab active:cursor-grabbing"
+                  >
+                    <LeadCard 
+                      lead={lead} 
+                      onDelete={onDelete} 
+                      onUpdateStatus={onUpdateStatus} 
+                      onEdit={onEdit} 
+                    />
+                  </div>
                 ))
               ) : (
                 <div className="text-center py-10 opacity-30 text-sm italic">Empty</div>

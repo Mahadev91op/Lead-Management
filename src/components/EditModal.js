@@ -6,13 +6,23 @@ import { motion } from "framer-motion";
 export default function EditModal({ lead, onClose, onSave }) {
   const [formData, setFormData] = useState({ ...lead });
   const [loading, setLoading] = useState(false);
+  const [newNote, setNewNote] = useState("");
+  const [addingNote, setAddingNote] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    await onSave(lead._id, formData);
+    await onSave(lead._id, { ...formData, newNote: newNote ? newNote : undefined });
     setLoading(false);
     onClose();
+  };
+
+  const handleAddNoteQuickly = async () => {
+    if (!newNote.trim()) return;
+    setAddingNote(true);
+    await onSave(lead._id, { newNote: newNote.trim() });
+    setNewNote("");
+    setAddingNote(false);
   };
 
   return (
@@ -93,6 +103,23 @@ export default function EditModal({ lead, onClose, onSave }) {
                 ) : (
                     <p className="text-slate-500 text-xs italic">No history recorded yet.</p>
                 )}
+            </div>
+            <div className="mt-3 flex gap-2">
+                <input 
+                    type="text" 
+                    placeholder="Add a quick note or update..." 
+                    className="flex-1 bg-white border border-slate-200 shadow-sm rounded-xl px-3 py-2 text-sm text-slate-900 outline-none focus:border-cyan-500"
+                    value={newNote}
+                    onChange={e => setNewNote(e.target.value)}
+                />
+                <button 
+                    type="button"
+                    onClick={handleAddNoteQuickly}
+                    disabled={addingNote || !newNote.trim()}
+                    className="bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold px-4 py-2 rounded-xl transition-all disabled:opacity-50"
+                >
+                    {addingNote ? "..." : "Add"}
+                </button>
             </div>
           </div>
           {/* ---------------------------------- */}

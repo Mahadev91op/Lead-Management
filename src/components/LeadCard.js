@@ -74,8 +74,12 @@ export default function LeadCard({ lead, onDelete, onUpdateStatus, onEdit }) {
         <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 text-sm text-slate-600 flex flex-col gap-2.5 mt-3">
            <div className="flex justify-between items-center border-b border-slate-200 pb-2">
               <span className="flex items-center gap-2 truncate"><Mail size={14} className="text-slate-500"/> {lead.email}</span>
+              <a href={`mailto:${lead.email}`} className="text-cyan-600 hover:bg-cyan-100 p-1 rounded-md transition"><Mail size={12}/></a>
            </div>
-           <span className="flex items-center gap-2"><Phone size={14} className="text-slate-500"/> {lead.phone || "No Phone"}</span>
+           <div className="flex justify-between items-center">
+              <span className="flex items-center gap-2"><Phone size={14} className="text-slate-500"/> {lead.phone || "No Phone"}</span>
+              {lead.phone && <a href={`tel:${lead.phone}`} className="text-cyan-600 hover:bg-cyan-100 p-1 rounded-md transition"><Phone size={12}/></a>}
+           </div>
         </div>
       </div>
 
