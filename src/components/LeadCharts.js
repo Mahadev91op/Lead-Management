@@ -27,8 +27,8 @@ export default function LeadCharts({ leads }) {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
       
       {/* Chart 1: Status Distribution */}
-      <div className="bg-slate-900/60 border border-slate-800 p-6 rounded-2xl backdrop-blur-xl">
-        <h3 className="text-white font-bold mb-4">Lead Status Distribution</h3>
+      <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm">
+        <h3 className="text-slate-900 font-bold mb-4">Lead Status Distribution</h3>
         <div className="h-64 w-full">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
@@ -47,7 +47,7 @@ export default function LeadCharts({ leads }) {
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
-              <Tooltip contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155', color: '#fff' }} />
+              <Tooltip contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e2e8f0', color: '#0f172a' }} />
               <Legend />
             </PieChart>
           </ResponsiveContainer>
@@ -55,16 +55,16 @@ export default function LeadCharts({ leads }) {
       </div>
 
       {/* Chart 2: Services Demand */}
-      <div className="bg-slate-900/60 border border-slate-800 p-6 rounded-2xl backdrop-blur-xl">
-        <h3 className="text-white font-bold mb-4">Services Demand</h3>
+      <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm">
+        <h3 className="text-slate-900 font-bold mb-4">Services Demand</h3>
         <div className="h-64 w-full">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={serviceData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-              <XAxis dataKey="name" stroke="#94a3b8" fontSize={12} />
-              <YAxis stroke="#94a3b8" fontSize={12} />
-              <Tooltip cursor={{fill: '#334155', opacity: 0.2}} contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155', color: '#fff' }} />
-              <Bar dataKey="count" fill="#06b6d4" radius={[4, 4, 0, 0]} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+              <XAxis dataKey="name" stroke="#64748b" fontSize={12} />
+              <YAxis stroke="#64748b" fontSize={12} />
+              <Tooltip cursor={{fill: '#f1f5f9', opacity: 0.8}} contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e2e8f0', color: '#0f172a' }} />
+              <Bar dataKey="count" fill="#0ea5e9" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>

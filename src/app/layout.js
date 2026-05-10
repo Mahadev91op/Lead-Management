@@ -50,7 +50,7 @@ export const metadata = {
 
 // --- VIEWPORT SETTINGS FOR MOBILE ---
 export const viewport = {
-  themeColor: "#020617", // Background color match karega status bar se
+  themeColor: "#f8fafc", // Background color match karega status bar se
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,

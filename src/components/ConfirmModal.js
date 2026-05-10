@@ -6,26 +6,26 @@ export default function ConfirmModal({ isOpen, onClose, onConfirm, title, messag
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.9 }}
-        className="bg-slate-900 border border-slate-700 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden"
+        className="bg-white border border-slate-200 w-full max-w-md rounded-2xl shadow-xl overflow-hidden"
       >
         <div className="p-6 text-center">
-            <div className="mx-auto bg-red-500/10 w-16 h-16 rounded-full flex items-center justify-center mb-4 border border-red-500/20">
-                <AlertTriangle className="text-red-500" size={32} />
+            <div className="mx-auto bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mb-4 border border-red-200">
+                <AlertTriangle className="text-red-600" size={32} />
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">{title || "Are you sure?"}</h3>
-            <p className="text-slate-400 text-sm mb-6 leading-relaxed">
+            <h3 className="text-xl font-bold text-slate-900 mb-2">{title || "Are you sure?"}</h3>
+            <p className="text-slate-600 text-sm mb-6 leading-relaxed">
                 {message || "This action cannot be undone. This lead will be permanently removed from your database."}
             </p>
             
             <div className="flex gap-3 justify-center">
                 <button 
                     onClick={onClose}
-                    className="px-5 py-2.5 rounded-xl bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 transition border border-slate-700"
+                    className="px-5 py-2.5 rounded-xl bg-white text-slate-700 font-medium hover:bg-slate-50 transition border border-slate-200 shadow-sm"
                 >
                     Cancel
                 </button>

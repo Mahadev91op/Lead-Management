@@ -29,30 +29,30 @@ export default function LoginPage() {
         className="w-full max-w-md"
       >
         {/* Glass Card */}
-        <div className="bg-slate-900/60 backdrop-blur-2xl border border-slate-700/50 p-8 rounded-3xl shadow-2xl relative overflow-hidden">
+        <div className="bg-white/80 backdrop-blur-2xl border border-slate-200 p-8 rounded-3xl shadow-xl relative overflow-hidden">
           
           {/* Decorative Gradient Glow */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-70"></div>
 
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-extrabold text-white tracking-tight">
-              Dev<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600">Samp</span>
+            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+              Dev<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-600">Samp</span>
             </h1>
-            <p className="text-slate-400 text-sm mt-2">Access your agency dashboard</p>
+            <p className="text-slate-500 text-sm mt-2">Access your agency dashboard</p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-5">
             {/* Email Input */}
             <div className="space-y-1">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Email</label>
+              <label className="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Email</label>
               <div className="relative group">
-                <div className="absolute left-3.5 top-3.5 text-slate-500 group-focus-within:text-cyan-400 transition-colors">
+                <div className="absolute left-3.5 top-3.5 text-slate-400 group-focus-within:text-cyan-600 transition-colors">
                   <Mail size={18} />
                 </div>
                 <input 
                   type="email"
                   required
-                  className="w-full bg-slate-950/50 border border-slate-700 rounded-xl py-3 pl-11 pr-4 text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 transition-all"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-11 pr-4 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 transition-all shadow-inner"
                   placeholder="admin@devsamp.com"
                   value={form.email}
                   onChange={e => setForm({...form, email: e.target.value})}
@@ -62,15 +62,15 @@ export default function LoginPage() {
 
             {/* Password Input */}
             <div className="space-y-1">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Password</label>
+              <label className="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Password</label>
               <div className="relative group">
-                <div className="absolute left-3.5 top-3.5 text-slate-500 group-focus-within:text-cyan-400 transition-colors">
+                <div className="absolute left-3.5 top-3.5 text-slate-400 group-focus-within:text-cyan-600 transition-colors">
                   <Lock size={18} />
                 </div>
                 <input 
                   type="password"
                   required
-                  className="w-full bg-slate-950/50 border border-slate-700 rounded-xl py-3 pl-11 pr-4 text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 transition-all"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-11 pr-4 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 transition-all shadow-inner"
                   placeholder="••••••••"
                   value={form.password}
                   onChange={e => setForm({...form, password: e.target.value})}

@@ -43,14 +43,14 @@ export default function LeadForm({ onClose, onLeadAdded }) {
   if(!user) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md">
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-        className="bg-slate-900 border border-slate-700 w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+        className="bg-white border border-slate-200 w-full max-w-2xl rounded-2xl shadow-xl overflow-hidden flex flex-col max-h-[90vh]"
       >
-        <div className="flex justify-between items-center p-5 border-b border-slate-800 bg-slate-950">
-          <h2 className="text-xl font-bold text-white">Add New Lead</h2>
-          <button onClick={onClose} className="text-slate-400 hover:text-white bg-slate-800 p-2 rounded-full"><X size={20}/></button>
+        <div className="flex justify-between items-center p-5 border-b border-slate-200 bg-slate-50">
+          <h2 className="text-xl font-bold text-slate-900">Add New Lead</h2>
+          <button onClick={onClose} className="text-slate-500 hover:text-slate-900 bg-slate-200 p-2 rounded-full"><X size={20}/></button>
         </div>
 
         <div className="p-6 overflow-y-auto custom-scrollbar">
@@ -80,8 +80,8 @@ export default function LeadForm({ onClose, onLeadAdded }) {
                 <InputGroup icon={<LinkIcon size={18}/>} placeholder="Social Link" value={form.socialLink} onChange={e => setForm({...form, socialLink: e.target.value})} />
 
                 <div className="relative group">
-                    <Flag className="absolute left-3.5 top-3.5 text-slate-500" size={18} />
-                    <select className="w-full bg-slate-950/50 border border-slate-700 rounded-xl py-3 pl-11 pr-4 text-white outline-none focus:border-cyan-500 appearance-none text-sm"
+                    <Flag className="absolute left-3.5 top-3.5 text-slate-400" size={18} />
+                    <select className="w-full bg-white border border-slate-200 rounded-xl py-3 pl-11 pr-4 text-slate-900 outline-none focus:border-cyan-500 appearance-none text-sm"
                         value={form.priority} onChange={e => setForm({...form, priority: e.target.value})}>
                         <option value="High">High Priority 🔥</option>
                         <option value="Medium">Medium Priority</option>
@@ -92,8 +92,8 @@ export default function LeadForm({ onClose, onLeadAdded }) {
                 <InputGroup icon={<Calendar size={18}/>} type="date" value={form.followUpDate} onChange={e => setForm({...form, followUpDate: e.target.value})} />
 
                 <div className="relative group">
-                    <Layers className="absolute left-3.5 top-3.5 text-slate-500" size={18} />
-                    <select className="w-full bg-slate-950/50 border border-slate-700 rounded-xl py-3 pl-11 pr-4 text-white outline-none focus:border-cyan-500 appearance-none text-sm"
+                    <Layers className="absolute left-3.5 top-3.5 text-slate-400" size={18} />
+                    <select className="w-full bg-white border border-slate-200 rounded-xl py-3 pl-11 pr-4 text-slate-900 outline-none focus:border-cyan-500 appearance-none text-sm"
                         value={form.service} onChange={e => setForm({...form, service: e.target.value})}>
                         <option>Web Development</option>
                         <option>App Development</option>
@@ -105,8 +105,8 @@ export default function LeadForm({ onClose, onLeadAdded }) {
                 <InputGroup icon={<IndianRupee size={18}/>} placeholder="Budget" value={form.budget} onChange={e => setForm({...form, budget: e.target.value})} />
 
                 <div className="md:col-span-2 relative">
-                    <FileText className="absolute left-3.5 top-3.5 text-slate-500" size={18} />
-                    <textarea rows="3" className="w-full bg-slate-950/50 border border-slate-700 rounded-xl py-3 pl-11 pr-4 text-white outline-none focus:border-cyan-500 text-sm resize-none"
+                    <FileText className="absolute left-3.5 top-3.5 text-slate-400" size={18} />
+                    <textarea rows="3" className="w-full bg-white border border-slate-200 rounded-xl py-3 pl-11 pr-4 text-slate-900 outline-none focus:border-cyan-500 text-sm resize-none"
                     placeholder="Requirement Notes..." value={form.notes} onChange={e => setForm({...form, notes: e.target.value})}></textarea>
                 </div>
 
@@ -125,11 +125,11 @@ export default function LeadForm({ onClose, onLeadAdded }) {
 function InputGroup({ icon, type = "text", placeholder, value, onChange, error }) {
   return (
     <div className="relative group">
-      <div className={`absolute left-3.5 top-3.5 transition-colors ${error ? "text-red-500" : "text-slate-500 group-focus-within:text-cyan-400"}`}>{icon}</div>
+      <div className={`absolute left-3.5 top-3.5 transition-colors ${error ? "text-red-500" : "text-slate-400 group-focus-within:text-cyan-600"}`}>{icon}</div>
       <input 
         type={type} 
-        className={`w-full bg-slate-950/50 border rounded-xl py-3 pl-11 pr-4 text-white outline-none placeholder-slate-600 text-sm transition-all
-        ${error ? "border-red-500 focus:border-red-500 animate-shake" : "border-slate-700 focus:border-cyan-500"}`}
+        className={`w-full bg-white border rounded-xl py-3 pl-11 pr-4 text-slate-900 outline-none placeholder-slate-400 text-sm transition-all shadow-sm
+        ${error ? "border-red-500 focus:border-red-500 animate-shake" : "border-slate-200 focus:border-cyan-500"}`}
         placeholder={placeholder} value={value} onChange={onChange} 
       />
       {error && <span className="absolute right-3 top-3.5 text-red-500"><AlertCircle size={18}/></span>}

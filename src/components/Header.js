@@ -9,17 +9,17 @@ export default function Header() {
   return (
     <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex justify-between items-center mb-8">
       <div>
-        <h1 className="text-4xl md:text-5xl font-extrabold text-white">
-          Dev<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600">Samp</span>
+        <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900">
+          Dev<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-600">Samp</span>
         </h1>
-        <p className="text-slate-400 mt-2 text-sm">Custom CRM System</p>
+        <p className="text-slate-500 mt-2 text-sm">Custom CRM System</p>
       </div>
       <div>
         {user ? (
           <div className="flex items-center gap-3">
             {/* Profile Link */}
-            <Link href="/profile" className="flex items-center gap-2 text-white font-medium bg-slate-800/50 hover:bg-slate-800 px-4 py-2 rounded-xl border border-slate-700 transition">
-              <User className="text-cyan-400" size={18} /> 
+            <Link href="/profile" className="flex items-center gap-2 text-slate-700 font-medium bg-white hover:bg-slate-50 px-4 py-2 rounded-xl border border-slate-200 transition shadow-sm">
+              <User className="text-cyan-600" size={18} /> 
               <span className="hidden md:inline">{user.name}</span>
             </Link>
             

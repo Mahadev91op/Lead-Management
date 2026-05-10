@@ -29,22 +29,22 @@ export default function LeadList({ leads, loading, onDelete, onUpdateStatus, onE
     <div className="lg:col-span-2">
       <div className="flex flex-col gap-4 mb-6">
         <div className="flex justify-between items-center">
-          <h2 className="text-xl font-bold text-white flex items-center gap-2"><Inbox className="text-cyan-400" size={20}/> Pipeline</h2>
-          <span className="text-[10px] font-bold bg-slate-800 text-slate-400 px-2 py-1 rounded border border-slate-700">
+          <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2"><Inbox className="text-cyan-600" size={20}/> Pipeline</h2>
+          <span className="text-[10px] font-bold bg-slate-100 text-slate-600 px-2 py-1 rounded border border-slate-200">
             {filteredLeads.length} leads
           </span>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-grow">
-            <Search className="absolute left-3 top-2.5 text-slate-500" size={16} />
-            <input type="text" placeholder="Search leads..." className="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 pl-9 pr-4 text-sm text-white focus:border-cyan-500 outline-none"
+            <Search className="absolute left-3 top-2.5 text-slate-400" size={16} />
+            <input type="text" placeholder="Search leads..." className="w-full bg-white border border-slate-200 shadow-sm rounded-xl py-2 pl-9 pr-4 text-sm text-slate-900 focus:border-cyan-500 outline-none"
               value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
           </div>
           <div className="flex gap-2">
              <div className="relative">
-                <Filter className="absolute left-3 top-2.5 text-slate-500" size={14} />
-                <select className="bg-slate-900 border border-slate-700 rounded-xl py-2 pl-8 pr-6 text-sm text-slate-300 outline-none appearance-none cursor-pointer"
+                <Filter className="absolute left-3 top-2.5 text-slate-400" size={14} />
+                <select className="bg-white border border-slate-200 shadow-sm rounded-xl py-2 pl-8 pr-6 text-sm text-slate-700 outline-none appearance-none cursor-pointer"
                   value={filterService} onChange={(e) => setFilterService(e.target.value)}>
                   <option value="All">All Services</option>
                   <option value="Web Development">Web Dev</option>
@@ -53,8 +53,8 @@ export default function LeadList({ leads, loading, onDelete, onUpdateStatus, onE
                 </select>
              </div>
              <div className="relative">
-                <ArrowUpDown className="absolute left-3 top-2.5 text-slate-500" size={14} />
-                <select className="bg-slate-900 border border-slate-700 rounded-xl py-2 pl-8 pr-6 text-sm text-slate-300 outline-none appearance-none cursor-pointer"
+                <ArrowUpDown className="absolute left-3 top-2.5 text-slate-400" size={14} />
+                <select className="bg-white border border-slate-200 shadow-sm rounded-xl py-2 pl-8 pr-6 text-sm text-slate-700 outline-none appearance-none cursor-pointer"
                   value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
                   <option value="Newest">Newest</option>
                   <option value="Oldest">Oldest</option>
@@ -75,7 +75,7 @@ export default function LeadList({ leads, loading, onDelete, onUpdateStatus, onE
             ))}
           </AnimatePresence>
           {filteredLeads.length === 0 && (
-            <div className="col-span-full text-center py-12 text-slate-500 bg-slate-900/30 rounded-xl border border-dashed border-slate-800">No leads found.</div>
+            <div className="col-span-full text-center py-12 text-slate-500 bg-slate-50 rounded-xl border border-dashed border-slate-200">No leads found.</div>
           )}
         </div>
       )}

@@ -21,10 +21,10 @@ export default function Stats({ leads }) {
 
   // कार्ड्स का डिज़ाइन
   const cards = [
-    { label: "Total Leads", value: totalLeads, icon: <Users className="text-blue-400" />, color: "from-blue-500/20 to-blue-600/5" },
-    { label: "Pipeline Value", value: `₹${totalValue.toLocaleString()}`, icon: <Wallet className="text-green-400" />, color: "from-green-500/20 to-green-600/5" },
-    { label: "Closed Deals", value: closedDeals, icon: <CheckCircle className="text-purple-400" />, color: "from-purple-500/20 to-purple-600/5" },
-    { label: "Success Rate", value: `${conversionRate}%`, icon: <TrendingUp className="text-orange-400" />, color: "from-orange-500/20 to-orange-600/5" },
+    { label: "Total Leads", value: totalLeads, icon: <Users className="text-blue-600" />, color: "from-blue-50 to-white" },
+    { label: "Pipeline Value", value: `₹${totalValue.toLocaleString()}`, icon: <Wallet className="text-green-600" />, color: "from-green-50 to-white" },
+    { label: "Closed Deals", value: closedDeals, icon: <CheckCircle className="text-purple-600" />, color: "from-purple-50 to-white" },
+    { label: "Success Rate", value: `${conversionRate}%`, icon: <TrendingUp className="text-orange-600" />, color: "from-orange-50 to-white" },
   ];
 
   return (
@@ -35,13 +35,13 @@ export default function Stats({ leads }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.1 }}
-          className={`bg-gradient-to-br ${card.color} border border-slate-800 p-4 rounded-2xl backdrop-blur-sm`}
+          className={`bg-gradient-to-br ${card.color} border border-slate-200 p-4 rounded-2xl shadow-sm`}
         >
           <div className="flex justify-between items-start mb-2">
-            <p className="text-slate-400 text-xs font-medium uppercase tracking-wider">{card.label}</p>
+            <p className="text-slate-500 text-xs font-medium uppercase tracking-wider">{card.label}</p>
             {card.icon}
           </div>
-          <h3 className="text-2xl font-bold text-white">{card.value}</h3>
+          <h3 className="text-2xl font-bold text-slate-900">{card.value}</h3>
         </motion.div>
       ))}
     </div>

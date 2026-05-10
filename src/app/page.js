@@ -114,12 +114,12 @@ export default function Home() {
     toast.success("Lead Info Updated");
   };
 
-  if (!user) return <div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-500">Loading DevSamp...</div>;
+  if (!user) return <div className="min-h-screen bg-slate-50 flex items-center justify-center text-slate-500">Loading DevSamp...</div>;
 
   return (
-    <div className="min-h-screen text-slate-200 font-sans pb-20">
+    <div className="min-h-screen text-slate-800 font-sans pb-20">
       <Background />
-      <Toaster position="top-center" toastOptions={{ style: { background: '#1e293b', color: '#fff', border: '1px solid #334155' } }}/>
+      <Toaster position="top-center" toastOptions={{ style: { background: '#ffffff', color: '#0f172a', border: '1px solid #e2e8f0' } }}/>
 
       <div className="max-w-[1600px] mx-auto p-4 md:p-6">
         <Header />
@@ -129,29 +129,29 @@ export default function Home() {
         <Stats leads={leads} /> 
 
         {/* Filters & Actions */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6 sticky top-2 z-30 bg-slate-950/80 p-2 rounded-2xl backdrop-blur-md border border-slate-800 shadow-xl">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6 sticky top-2 z-30 bg-white/80 p-2 rounded-2xl backdrop-blur-md border border-slate-200 shadow-sm">
             
             {/* FIX: Form Wrapper to prevent reload on Enter */}
             <form onSubmit={(e) => e.preventDefault()} className="relative w-full md:w-96 group">
-                <Search className="absolute left-3 top-3 text-slate-500 group-focus-within:text-cyan-400 transition-colors" size={18} />
+                <Search className="absolute left-3 top-3 text-slate-400 group-focus-within:text-cyan-600 transition-colors" size={18} />
                 <input 
                     type="text" 
                     placeholder="Search leads..." 
-                    className="w-full bg-slate-900 border border-slate-700 rounded-xl py-2.5 pl-10 pr-4 text-white focus:border-cyan-500 outline-none transition-all"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 pl-10 pr-4 text-slate-900 focus:border-cyan-500 outline-none transition-all shadow-inner"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                 />
             </form>
 
             <div className="flex gap-2 w-full md:w-auto overflow-x-auto">
-                <button onClick={downloadCSV} className="bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 font-bold px-3 py-2.5 rounded-xl transition-all flex items-center gap-2">
+                <button onClick={downloadCSV} className="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-bold px-3 py-2.5 rounded-xl transition-all flex items-center gap-2 shadow-sm">
                     <Download size={18} />
                 </button>
 
-                <div className="flex bg-slate-900 border border-slate-700 rounded-xl p-1">
-                    <button onClick={() => setViewMode("board")} className={`p-2.5 rounded-lg transition-all ${viewMode==='board' ? 'bg-slate-800 text-cyan-400 shadow-sm' : 'text-slate-500 hover:text-slate-300'}`} title="Kanban Board"><Columns size={18}/></button>
-                    <button onClick={() => setViewMode("grid")} className={`p-2.5 rounded-lg transition-all ${viewMode==='grid' ? 'bg-slate-800 text-cyan-400 shadow-sm' : 'text-slate-500 hover:text-slate-300'}`} title="Grid View"><LayoutGrid size={18}/></button>
-                    <button onClick={() => setViewMode("table")} className={`p-2.5 rounded-lg transition-all ${viewMode==='table' ? 'bg-slate-800 text-cyan-400 shadow-sm' : 'text-slate-500 hover:text-slate-300'}`} title="Table View"><List size={18}/></button>
+                <div className="flex bg-slate-50 border border-slate-200 rounded-xl p-1 shadow-inner">
+                    <button onClick={() => setViewMode("board")} className={`p-2.5 rounded-lg transition-all ${viewMode==='board' ? 'bg-white text-cyan-600 shadow-sm border border-slate-200/60' : 'text-slate-500 hover:text-slate-700'}`} title="Kanban Board"><Columns size={18}/></button>
+                    <button onClick={() => setViewMode("grid")} className={`p-2.5 rounded-lg transition-all ${viewMode==='grid' ? 'bg-white text-cyan-600 shadow-sm border border-slate-200/60' : 'text-slate-500 hover:text-slate-700'}`} title="Grid View"><LayoutGrid size={18}/></button>
+                    <button onClick={() => setViewMode("table")} className={`p-2.5 rounded-lg transition-all ${viewMode==='table' ? 'bg-white text-cyan-600 shadow-sm border border-slate-200/60' : 'text-slate-500 hover:text-slate-700'}`} title="Table View"><List size={18}/></button>
                 </div>
 
                 <button 

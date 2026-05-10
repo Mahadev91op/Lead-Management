@@ -29,8 +29,8 @@ export default function LeadCard({ lead, onDelete, onUpdateStatus, onEdit }) {
       initial={{ opacity: 0, scale: 0.98 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      className={`group bg-slate-900/80 border p-5 rounded-2xl transition-all shadow-lg flex flex-col justify-between h-full
-        ${isOverdue ? "border-red-500/50 shadow-red-900/10" : isToday ? "border-green-500/50 shadow-green-900/10" : "border-slate-800 hover:border-cyan-500/30"}
+      className={`group bg-white border p-5 rounded-2xl transition-all shadow-md flex flex-col justify-between h-full
+        ${isOverdue ? "border-red-300 shadow-red-100" : isToday ? "border-green-300 shadow-green-100" : "border-slate-200 hover:border-cyan-400 shadow-sm hover:shadow-cyan-100"}
       `}
     >
       <div>
@@ -54,7 +54,7 @@ export default function LeadCard({ lead, onDelete, onUpdateStatus, onEdit }) {
         {/* Main Info */}
         <div className="flex justify-between items-start">
             <div>
-                <h3 className="text-lg font-bold text-white group-hover:text-cyan-400 transition-colors leading-tight">
+                <h3 className="text-lg font-bold text-slate-900 group-hover:text-cyan-600 transition-colors leading-tight">
                 {lead.name}
                 </h3>
                 <div className="flex items-center gap-3 text-xs text-slate-500 mt-1.5">
@@ -71,20 +71,20 @@ export default function LeadCard({ lead, onDelete, onUpdateStatus, onEdit }) {
         </div>
 
         {/* Contact Info */}
-        <div className="bg-slate-950/50 p-3 rounded-xl border border-slate-800/50 text-sm text-slate-400 flex flex-col gap-2.5 mt-3">
-           <div className="flex justify-between items-center border-b border-slate-800/50 pb-2">
-              <span className="flex items-center gap-2 truncate"><Mail size={14} className="text-slate-600"/> {lead.email}</span>
+        <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 text-sm text-slate-600 flex flex-col gap-2.5 mt-3">
+           <div className="flex justify-between items-center border-b border-slate-200 pb-2">
+              <span className="flex items-center gap-2 truncate"><Mail size={14} className="text-slate-500"/> {lead.email}</span>
            </div>
-           <span className="flex items-center gap-2"><Phone size={14} className="text-slate-600"/> {lead.phone || "No Phone"}</span>
+           <span className="flex items-center gap-2"><Phone size={14} className="text-slate-500"/> {lead.phone || "No Phone"}</span>
         </div>
       </div>
 
       {/* Footer Actions */}
-      <div className="flex items-center justify-between mt-4 pt-3 border-t border-slate-800/50">
+      <div className="flex items-center justify-between mt-4 pt-3 border-t border-slate-200">
           <select 
             value={lead.status} 
             onChange={(e) => onUpdateStatus(lead._id, e.target.value)}
-            className={`text-[11px] font-bold px-2 py-1.5 rounded-lg border outline-none bg-slate-950 cursor-pointer ${getStatusColor(lead.status)}`}
+            className={`text-[11px] font-bold px-2 py-1.5 rounded-lg border outline-none bg-white cursor-pointer ${getStatusColor(lead.status)}`}
           >
             <option value="New">New</option>
             <option value="Contacted">Contacted</option>

@@ -18,17 +18,28 @@ export function AuthProvider({ children }) {
   }, []);
 
   const login = async (email, password) => {
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-    const data = await res.json();
-    if (data.success) {
-      setUser(data.user);
-      router.push("/");
-    } else {
-      alert(data.error);
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      
+      let data;
+      try {
+        data = await res.json();
+      } catch (e) {
+        throw new Error("Server returned an invalid response.");
+      }
+
+      if (data.success) {
+        setUser(data.user);
+        router.push("/");
+      } else {
+        alert(data.error || "Login failed");
+      }
+    } catch (error) {
+      alert(error.message || "An error occurred during login");
     }
   };
 

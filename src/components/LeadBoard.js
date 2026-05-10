@@ -19,11 +19,11 @@ export default function LeadBoard({ leads, onDelete, onUpdateStatus, onEdit }) {
         const columnLeads = leads.filter((l) => l.status === status);
 
         return (
-          <div key={status} className={`min-w-[320px] max-w-[320px] flex flex-col rounded-2xl border ${getColumnColor(status)} backdrop-blur-sm`}>
+          <div key={status} className={`min-w-[320px] max-w-[320px] flex flex-col rounded-2xl border ${getColumnColor(status)} backdrop-blur-sm bg-white`}>
             {/* Column Header */}
-            <div className="p-4 border-b border-slate-800/50 flex justify-between items-center bg-slate-900/40 rounded-t-2xl">
-              <h3 className="font-bold text-white text-sm uppercase tracking-wide">{status}</h3>
-              <span className="text-xs font-bold bg-slate-800 px-2 py-1 rounded-full text-slate-400">
+            <div className="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50 rounded-t-2xl">
+              <h3 className="font-bold text-slate-800 text-sm uppercase tracking-wide">{status}</h3>
+              <span className="text-xs font-bold bg-slate-200 px-2 py-1 rounded-full text-slate-600">
                 {columnLeads.length}
               </span>
             </div>
